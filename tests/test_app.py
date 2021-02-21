@@ -1,14 +1,14 @@
-from todomvc_test.helpers import app
+from tests.pages import app
 
 
 def test_common_management():
-    app.open_page()
+    app.visit()
 
     app.add('a', 'b', 'c', 'd')
     app.assert_todos('a', 'b', 'c', 'd')
 
     app.edit('b', 'b edited')
-    app.complete('b edited')
+    app.toggle('b edited')
     app.clear_completed()
     app.assert_todos('a', 'c', 'd')
 
