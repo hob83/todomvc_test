@@ -22,10 +22,10 @@ def assert_todos(*texts):
     todo_list.should(have.exact_texts(*texts))
 
 
-def start_editing(text, added_text):
+def start_editing(text, new_text):
     todo_list.element_by(have.exact_text(text)).double_click()
     return todo_list.element_by(have.css_class('editing')).element('.edit').\
-        perform(command.js.set_value(added_text))
+        perform(command.js.set_value(new_text))
 
 
 def edit(text, new_text):
@@ -41,8 +41,8 @@ def clear_completed():
     browser.element('#clear-completed').click()
 
 
-def cancel_editing(text, added_text):
-    start_editing(text, added_text).press_escape()
+def cancel_editing(text, new_text):
+    start_editing(text, new_text).press_escape()
 
 
 def delete(text):
