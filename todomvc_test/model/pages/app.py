@@ -18,7 +18,7 @@ def add(*texts):
         browser.element('#new-todo').type(text).press_enter()
 
 
-def assert_todos(*texts):
+def should_be(*texts):
     todo_list.should(have.exact_texts(*texts))
 
 
