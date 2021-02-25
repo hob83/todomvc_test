@@ -1,18 +1,17 @@
-from selene import have
+from selene import have, command
 from selene.support.shared import browser
-from selene import command
 
 
 class TodoMvcPage:
-    def collection(self):
-        return browser.all('#todo-list>li')
+    def __init__(self):
+        self.collection = browser.all('#todo-list>li')
 
     def visit(self):
         browser.open('https://todomvc4tasj.herokuapp.com/')
-        window_uploaded = "return $._data($('#clear-completed')[0], 'events')" \
-                          ".hasOwnProperty('click') & " \
-                          "Object.keys(require.s.contexts._.defined)." \
-                          "length == 39"
+        window_uploaded = \
+            '''return $._data($('#clear-completed')[0], 'events')
+            .hasOwnProperty('click') & 
+            Object.keys(require.s.contexts._.defined).length == 39'''
         browser.should(have.js_returned(True, window_uploaded))
         return self
 
@@ -30,8 +29,8 @@ class TodoMvcPage:
             should(have.exact_text(str(value)))
 
     def start_editing(self, text: str, new_text: str):
-        self.collection().element_by(have.exact_text(text)).double_click()
-        return self.collection().element_by(have.css_class('editing')) \
+        self.collection.element_by(have.exact_text(text)).double_click()
+        return self.collection.element_by(have.css_class('editing')) \
             .element('.edit').perform(command.js.set_value(new_text))
 
     def edit(self, text: str, new_text: str):
@@ -41,11 +40,11 @@ class TodoMvcPage:
         self.start_editing(text, new_text).press_escape()
 
     def items_should_be(self, *texts: str):
-        self.collection().should(have.exact_texts(*texts))
+        self.collection.should(have.exact_texts(*texts))
 
     def complete(self, *texts):
         for text in texts:
-            self.collection().element_by(have.exact_text(text)) \
+            self.collection.element_by(have.exact_text(text)) \
                 .element('.toggle').click()
 
     def complete_all(self):
@@ -54,13 +53,13 @@ class TodoMvcPage:
 
     def items_should_be_active(self, *texts: str):
         for text in texts:
-            self.collection().element_by(have.exact_text(text)) \
+            self.collection.element_by(have.exact_text(text)) \
                 .should(have.no.css_class('completed'))
         return self
 
     def items_should_be_completed(self, *texts: str):
         for text in texts:
-            self.collection().element_by(have.exact_text(text)) \
+            self.collection.element_by(have.exact_text(text)) \
                 .should(have.css_class('completed'))
         return self
 
@@ -69,11 +68,11 @@ class TodoMvcPage:
 
     def delete(self, *texts: str):
         for text in texts:
-            self.collection().element_by(have.exact_text(text)).hover() \
+            self.collection.element_by(have.exact_text(text)).hover() \
                 .element('.destroy').click()
 
     def activate(self, *texts):
         for text in texts:
-            self.collection().element_by(have.exact_text(text)) \
+            self.collection.element_by(have.exact_text(text)) \
                 .element('.toggle').click()
         return self
