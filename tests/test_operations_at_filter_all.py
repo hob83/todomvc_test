@@ -6,80 +6,94 @@ def test_add():
 
     todos.add('a', 'b', 'c', 'd')
 
-    todos.items_should_be('a', 'b', 'c', 'd')
-    todos.items_count_should_be(4)
+    todos.should_be('a', 'b', 'c', 'd')
+    todos.items_left_should_be(4)
 
 
-def test_edit():
-    todos.visit_with('a')
+def test_edit_by_press_enter():
+    todos.visit_with('a', 'b')
 
-    todos.edit('a', 'a edited')
+    todos.edit_by_enter('a', 'a edited')
 
-    todos.items_should_be('a edited')
-    todos.items_count_should_be(1)
+    todos.should_be('a edited', 'b')
+    todos.items_left_should_be(2)
+
+
+def test_edit_by_press_tab():
+    todos.visit_with('a', 'b')
+
+    todos.edit_by_tab('a', 'a edited')
+
+    todos.should_be('a edited', 'b')
+    todos.items_left_should_be(2)
 
 
 def test_cancel_editing():
-    todos.visit_with('a')
+    todos.visit_with('a', 'b')
 
     todos.cancel_editing('a', 'a edited')
 
-    todos.items_should_be('a')
-    todos.items_count_should_be(1)
+    todos.should_be('a', 'b')
+    todos.items_left_should_be(2)
 
 
 def test_complete():
-    todos.visit_with('a', 'b', 'c')
+    todos.visit_with('a', 'b')
 
-    todos.complete('b', 'c')
+    todos.toggle('b')
 
-    todos.items_should_be_active('a')
-    todos.items_should_be_completed('b', 'c')
-    todos.items_count_should_be(1)
+    todos.should_be_active('a')
+    todos.should_be_completed('b')
+    todos.items_left_should_be(1)
 
 
 def test_complete_all():
     todos.visit_with('a', 'b', 'c')
 
-    todos.complete_all()
+    todos.toggle_all()
 
-    todos.items_should_be_completed('a', 'b', 'c')
-    todos.items_count_should_be(0)
+    todos.should_be_active()
+    todos.should_be_completed('a', 'b', 'c')
+    todos.items_left_should_be(0)
 
 
 def test_clear_completed():
-    todos.visit_with('a', 'b', 'c').complete('b', 'c')
+    todos.visit_with('a', 'b', 'c')
+    todos.toggle('b', 'c')
 
     todos.clear_completed()
 
-    todos.items_should_be('a')
-    todos.items_count_should_be(1)
+    todos.should_be('a')
+    todos.items_left_should_be(1)
 
 
 def test_delete():
-    todos.visit_with('a', 'b', 'c')
+    todos.visit_with('a', 'b')
 
-    todos.delete('b', 'c')
+    todos.delete('b')
 
-    todos.items_should_be('a')
-    todos.items_count_should_be(1)
+    todos.should_be('a')
+    todos.items_left_should_be(1)
 
 
 def test_activate():
-    todos.visit_with('a', 'b', 'c', 'd').complete('b', 'c', 'd')
+    todos.visit_with('a', 'b', 'c')
+    todos.toggle('b', 'c')
 
-    todos.activate('b', 'c')
+    todos.toggle('b')
 
-    todos.items_should_be_completed('d')
-    todos.items_should_be_active('a', 'b', 'c')
-    todos.items_count_should_be(3)
+    todos.should_be_completed('c')
+    todos.should_be_active('a', 'b')
+    todos.items_left_should_be(2)
 
 
 def test_activate_all():
     todos.visit_with('a', 'b', 'c')
-    todos.complete('a')
+    todos.toggle('a')
+    todos.toggle_all()
 
-    todos.complete_all().complete_all()
+    todos.toggle_all()
 
-    todos.items_should_be_active('a', 'b', 'c')
-    todos.items_count_should_be(3)
+    todos.should_be_completed()
+    todos.should_be_active('a', 'b', 'c')
+    todos.items_left_should_be(3)

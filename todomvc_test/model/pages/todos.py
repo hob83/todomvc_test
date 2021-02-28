@@ -1,4 +1,4 @@
-from selene import have, command
+from selene import have
 from selene.support.shared import browser
 
 
@@ -8,71 +8,67 @@ class TodoMvcPage:
 
     def visit(self):
         browser.open('https://todomvc4tasj.herokuapp.com/')
-        window_uploaded = \
+        js_loaded = \
             '''return $._data($('#clear-completed')[0], 'events')
             .hasOwnProperty('click') & 
             Object.keys(require.s.contexts._.defined).length == 39'''
-        browser.should(have.js_returned(True, window_uploaded))
+        browser.should(have.js_returned(True, js_loaded))
         return self
 
     def visit_with(self, *texts):
         self.visit().add(*texts)
         return self
 
-    def add(self, *texts: str):
+    def add(self, *texts):
         for text in texts:
             browser.element('#new-todo').type(text).press_enter()
         return self
 
-    def items_count_should_be(self, value: int):
+    def items_left_should_be(self, value: int):
         browser.element('#todo-count>strong'). \
             should(have.exact_text(str(value)))
+        return self
 
     def start_editing(self, text: str, new_text: str):
         self.collection.element_by(have.exact_text(text)).double_click()
         return self.collection.element_by(have.css_class('editing')) \
-            .element('.edit').perform(command.js.set_value(new_text))
+            .element('.edit').with_(set_value_by_js=True).set_value(new_text)
 
-    def edit(self, text: str, new_text: str):
+    def edit_by_enter(self, text: str, new_text: str):
         self.start_editing(text, new_text).press_enter()
+
+    def edit_by_tab(self, text: str, new_text: str):
+        self.start_editing(text, new_text).press_tab()
 
     def cancel_editing(self, text: str, new_text: str):
         self.start_editing(text, new_text).press_escape()
 
-    def items_should_be(self, *texts: str):
+    def should_be(self, *texts: str):
         self.collection.should(have.exact_texts(*texts))
 
-    def complete(self, *texts):
+    def toggle(self, *texts):
         for text in texts:
             self.collection.element_by(have.exact_text(text)) \
                 .element('.toggle').click()
 
-    def complete_all(self):
+    def toggle_all(self):
         browser.element('#toggle-all').click()
         return self
 
-    def items_should_be_active(self, *texts: str):
-        for text in texts:
-            self.collection.element_by(have.exact_text(text)) \
-                .should(have.no.css_class('completed'))
+    def should_be_active(self, *texts: str):
+        self.collection.filtered_by(have.no.css_class('completed'))\
+            .should(have.exact_texts(*texts))
         return self
 
-    def items_should_be_completed(self, *texts: str):
-        for text in texts:
-            self.collection.element_by(have.exact_text(text)) \
-                .should(have.css_class('completed'))
+    def should_be_completed(self, *texts: str):
+        self.collection.filtered_by(have.css_class('completed'))\
+            .should(have.exact_texts(*texts))
         return self
 
     def clear_completed(self):
         browser.element('#clear-completed').click()
-
-    def delete(self, *texts: str):
-        for text in texts:
-            self.collection.element_by(have.exact_text(text)).hover() \
-                .element('.destroy').click()
-
-    def activate(self, *texts):
-        for text in texts:
-            self.collection.element_by(have.exact_text(text)) \
-                .element('.toggle').click()
         return self
+
+    def delete(self, text: str):
+        self.collection.element_by(have.exact_text(text)).hover()\
+            .element('.destroy').click()
