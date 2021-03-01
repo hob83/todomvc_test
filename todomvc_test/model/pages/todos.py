@@ -46,10 +46,9 @@ class TodoMvcPage:
     def should_be(self, *texts: str):
         self.collection.should(have.exact_texts(*texts))
 
-    def toggle(self, *texts):
-        for text in texts:
-            self.collection.element_by(have.exact_text(text)) \
-                .element('.toggle').click()
+    def toggle(self, text: str):
+        self.collection.element_by(have.exact_text(text))\
+            .element('.toggle').click()
 
     def toggle_all(self):
         browser.element('#toggle-all').click()

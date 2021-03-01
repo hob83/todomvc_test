@@ -10,7 +10,7 @@ def test_add():
     todos.items_left_should_be(4)
 
 
-def test_edit_by_press_enter():
+def test_edit_by_enter():
     todos.visit_with('a', 'b')
 
     todos.edit_by_enter('a', 'a edited')
@@ -19,7 +19,7 @@ def test_edit_by_press_enter():
     todos.items_left_should_be(2)
 
 
-def test_edit_by_press_tab():
+def test_edit_by_tab():
     todos.visit_with('a', 'b')
 
     todos.edit_by_tab('a', 'a edited')
@@ -47,8 +47,9 @@ def test_complete():
     todos.items_left_should_be(1)
 
 
-def test_complete_all():
+def test_complete_all_with_some_completed():
     todos.visit_with('a', 'b', 'c')
+    todos.toggle('a')
 
     todos.toggle_all()
 
@@ -58,8 +59,8 @@ def test_complete_all():
 
 
 def test_clear_completed():
-    todos.visit_with('a', 'b', 'c')
-    todos.toggle('b', 'c')
+    todos.visit_with('a', 'b')
+    todos.toggle('b')
 
     todos.clear_completed()
 
@@ -77,19 +78,18 @@ def test_delete():
 
 
 def test_activate():
-    todos.visit_with('a', 'b', 'c')
-    todos.toggle('b', 'c')
+    todos.visit_with('a', 'b')
+    todos.toggle('b')
 
     todos.toggle('b')
 
-    todos.should_be_completed('c')
+    todos.should_be_completed()
     todos.should_be_active('a', 'b')
     todos.items_left_should_be(2)
 
 
 def test_activate_all():
     todos.visit_with('a', 'b', 'c')
-    todos.toggle('a')
     todos.toggle_all()
 
     todos.toggle_all()
