@@ -1,6 +1,8 @@
 from selene import have
 from selene.support.shared import browser
 
+have_completed = have.css_class('completed')
+
 
 class TodoMvcPage:
     def __init__(self):
@@ -55,12 +57,12 @@ class TodoMvcPage:
         return self
 
     def should_be_active(self, *texts: str):
-        self.collection.filtered_by(have.no.css_class('completed'))\
+        self.collection.filtered_by(have_completed.not_)\
             .should(have.exact_texts(*texts))
         return self
 
     def should_be_completed(self, *texts: str):
-        self.collection.filtered_by(have.css_class('completed'))\
+        self.collection.filtered_by(have_completed)\
             .should(have.exact_texts(*texts))
         return self
 
