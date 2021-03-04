@@ -1,3 +1,3 @@
-from todomvc_test.model.pages.todos import TodoMvcPage
+from todomvc_test.model.todos import TodoMvcPage
 
 todos = TodoMvcPage()

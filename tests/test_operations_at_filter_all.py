@@ -37,6 +37,15 @@ def test_cancel_editing():
     todos.items_left_should_be(2)
 
 
+def test_delete_by_edit_to_blank():
+    todos.visit_with('a', 'b')
+
+    todos.edit_by_enter('a', '')
+
+    todos.should_be('b')
+    todos.items_left_should_be(1)
+
+
 def test_complete():
     todos.visit_with('a', 'b')
 
@@ -66,6 +75,7 @@ def test_clear_completed():
 
     todos.should_be('a')
     todos.items_left_should_be(1)
+    todos.should_be_clear_completed_hidden()
 
 
 def test_delete():
@@ -75,6 +85,7 @@ def test_delete():
 
     todos.should_be('a')
     todos.items_left_should_be(1)
+    todos.should_be_clear_completed_hidden()
 
 
 def test_activate():
@@ -86,6 +97,7 @@ def test_activate():
     todos.should_be_completed()
     todos.should_be_active('a', 'b')
     todos.items_left_should_be(2)
+    todos.should_be_clear_completed_hidden()
 
 
 def test_activate_all():

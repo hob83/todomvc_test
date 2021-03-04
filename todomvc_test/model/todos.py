@@ -66,6 +66,11 @@ class TodoMvcPage:
             .should(have.exact_texts(*texts))
         return self
 
+    def should_be_clear_completed_hidden(self):
+        browser.element('#clear-completed')\
+            .should(have.attribute('style', 'display: none;'))
+        return self
+
     def clear_completed(self):
         browser.element('#clear-completed').click()
         return self
