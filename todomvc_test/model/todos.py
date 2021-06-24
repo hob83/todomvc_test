@@ -4,6 +4,15 @@ from selene.support.shared import browser
 have_completed = have.css_class('completed')
 
 
+class TextTodo:
+    def __init__(self, text_todo: str, status: str = 'new'):
+        self.text_todo = text_todo
+        if status == 'new':
+            self.status = 'False'
+        else:
+            self.status = 'True'
+
+
 class TodoMvcPage:
     def __init__(self):
         self.collection = browser.all('#todo-list>li')
@@ -20,6 +29,26 @@ class TodoMvcPage:
     def visit_with(self, *texts):
         self.visit().add(*texts)
         return self
+
+    def visit_with_some_completed(self, *texts: TextTodo):
+        self.visit()
+        script = ''
+        for text in texts:
+            script += f'''{{\\\"completed\\\":{text.status},\\\"title
+            \\\":\\\"{text.text_todo}\\\"}}, '''
+        browser.execute_script(f'''localStorage['todos-troopjs'] = "[{script}]"''')
+        return self
+
+    def visit_with_moc_js(self):
+        self.visit()
+        texts = ('a', 'b', 'c')
+        status = False
+        script = ''
+        for text in texts:
+            script += f'''{{\\\"completed\\\":{str(status)},\\\"title
+                    \\\":\\\"{text}\\\"}}, '''
+        browser.execute_script(
+            f'''localStorage['todos-troopjs'] = "[{script}]"''')
 
     def add(self, *texts):
         for text in texts:

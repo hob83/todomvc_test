@@ -46,8 +46,16 @@ def test_delete_by_edit_to_blank():
     todos.items_left_should_be(1)
 
 
-def test_complete():
-    todos.visit_with('a', 'b')
+def test_complete_for_coding_exam():
+    todos.visit_with_some_completed(('a', 'new'), ('b', 'completed'))
+
+    todos.should_be_active('a')
+    todos.should_be_completed('b')
+    todos.items_left_should_be(1)
+
+
+def test_complete_moc_js():
+    todos.visit_with_moc_js()
 
     todos.toggle('b')
 
