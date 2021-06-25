@@ -1,4 +1,4 @@
-from todomvc_test.model import todos
+from todomvc_test.model import todos, TextTodo
 
 
 def test_add():
@@ -47,17 +47,7 @@ def test_delete_by_edit_to_blank():
 
 
 def test_complete_for_coding_exam():
-    todos.visit_with_some_completed(('a', 'new'), ('b', 'completed'))
-
-    todos.should_be_active('a')
-    todos.should_be_completed('b')
-    todos.items_left_should_be(1)
-
-
-def test_complete_moc_js():
-    todos.visit_with_moc_js()
-
-    todos.toggle('b')
+    todos.visit_with_some_completed(TextTodo('a'), TextTodo('b', 'completed'))
 
     todos.should_be_active('a')
     todos.should_be_completed('b')

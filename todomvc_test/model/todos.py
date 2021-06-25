@@ -8,9 +8,9 @@ class TextTodo:
     def __init__(self, text_todo: str, status: str = 'new'):
         self.text_todo = text_todo
         if status == 'new':
-            self.status = 'False'
+            self.status = 'false'
         else:
-            self.status = 'True'
+            self.status = 'true'
 
 
 class TodoMvcPage:
@@ -34,21 +34,10 @@ class TodoMvcPage:
         self.visit()
         script = ''
         for text in texts:
-            script += f'''{{\\\"completed\\\":{text.status},\\\"title
-            \\\":\\\"{text.text_todo}\\\"}}, '''
-        browser.execute_script(f'''localStorage['todos-troopjs'] = "[{script}]"''')
-        return self
-
-    def visit_with_moc_js(self):
-        self.visit()
-        texts = ('a', 'b', 'c')
-        status = False
-        script = ''
-        for text in texts:
-            script += f'''{{\\\"completed\\\":{str(status)},\\\"title
-                    \\\":\\\"{text}\\\"}}, '''
+            script += f'''{{\\\"completed\\\":{text.status},\\\"title\\\":\\\"{text.text_todo}\\\"}},'''
         browser.execute_script(
-            f'''localStorage['todos-troopjs'] = "[{script}]"''')
+            f'''localStorage['todos-troopjs'] = "[{script.rstrip(',')}]"''')
+        browser.driver.refresh()
 
     def add(self, *texts):
         for text in texts:
