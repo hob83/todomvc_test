@@ -47,11 +47,18 @@ def test_delete_by_edit_to_blank():
 
 
 def test_complete_for_coding_exam():
-    todos.visit_with_some_completed(TextTodo('a'), TextTodo('b', 'completed'))
+    todos.visit_with(TextTodo('a'), TextTodo('b', 'completed'))
 
     todos.should_be_active('a')
     todos.should_be_completed('b')
     todos.items_left_should_be(1)
+
+
+def test_complete_for_coding_exam_2():
+    todos.visit_with('a', 'b')
+
+    todos.should_be_active('a', 'b')
+    todos.items_left_should_be(2)
 
 
 def test_complete_all_with_some_completed():

@@ -26,18 +26,27 @@ class TodoMvcPage:
         browser.should(have.js_returned(True, js_loaded))
         return self
 
-    def visit_with(self, *texts):
-        self.visit().add(*texts)
-        return self
+    #def visit_with(self, *texts):
+    #    self.visit().add(*texts)
+    #    return self
 
-    def visit_with_some_completed(self, *texts: TextTodo):
+    def visit_with(self, *texts):
         self.visit()
         script = ''
-        for text in texts:
-            script += f'''{{\\\"completed\\\":{text.status},\\\"title\\\":\\\"{text.text_todo}\\\"}},'''
-        browser.execute_script(
-            f'''localStorage['todos-troopjs'] = "[{script.rstrip(',')}]"''')
-        browser.driver.refresh()
+        if isinstance(texts[0], TextTodo):
+            for text in texts:
+                script += f'''{{\\\"completed\\\":{text.status},\\\"title\\\":\\\"{text.text_todo}\\\"}},'''
+            browser.execute_script(
+                f'''localStorage['todos-troopjs'] = "[{script.rstrip(',')}]"''')
+            browser.driver.refresh()
+        else:
+            for text in texts:
+                stat = 'false'
+                tex = text
+                script += f'''{{\\\"completed\\\":{stat},\\\"title\\\":\\\"{tex}\\\"}},'''
+            browser.execute_script(
+                f'''localStorage['todos-troopjs'] = "[{script.rstrip(',')}]"''')
+            browser.driver.refresh()
 
     def add(self, *texts):
         for text in texts:
