@@ -30,7 +30,7 @@ class TodoMvcPage:
     #    self.visit().add(*texts)
     #    return self
 
-    def visit_with(self, *texts):
+    def visit_with_1(self, *texts):
         self.visit()
         script = ''
         if isinstance(texts[0], TextTodo):
@@ -41,6 +41,20 @@ class TodoMvcPage:
             browser.driver.refresh()
         else:
             for text in texts:
+                stat = 'false'
+                tex = text
+                script += f'''{{\\\"completed\\\":{stat},\\\"title\\\":\\\"{tex}\\\"}},'''
+            browser.execute_script(
+                f'''localStorage['todos-troopjs'] = "[{script.rstrip(',')}]"''')
+            browser.driver.refresh()
+
+    def visit_with(self, *texts):
+        self.visit()
+        script = ''
+        for text in texts:
+            if isinstance(text, TextTodo):
+                script += f'''{{\\\"completed\\\":{text.status},\\\"title\\\":\\\"{text.text_todo}\\\"}},'''
+            else:
                 stat = 'false'
                 tex = text
                 script += f'''{{\\\"completed\\\":{stat},\\\"title\\\":\\\"{tex}\\\"}},'''
