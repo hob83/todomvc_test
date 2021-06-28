@@ -7,6 +7,9 @@ authors = ["hob83 <buryachek83@gmail.com>"]
 [tool.poetry.dependencies]
 python = "^3.9"
 selene = {version = "^1.0.2", allow-prereleases = true}
+pydantic = "^1.8.2"
+python-dotenv = "^0.18.0"
+pytest-xdist = "^2.3.0"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"
